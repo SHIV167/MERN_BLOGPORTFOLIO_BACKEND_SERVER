@@ -15,7 +15,7 @@ connectDB();
 // Middleware
 app.use(cors({
   origin: '*'
-}));
+})); 
 
 
 
