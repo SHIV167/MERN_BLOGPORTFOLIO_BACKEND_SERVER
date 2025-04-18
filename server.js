@@ -14,7 +14,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: 'https://mern-blogportfolio-frontend.onrender.com', // or '*'
+  origin: '*', // or '*'
   credentials: true
 }));
 app.use(express.json());
