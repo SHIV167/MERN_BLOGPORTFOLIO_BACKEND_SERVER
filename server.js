@@ -13,10 +13,12 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({
-  origin: '*'
-})); 
-
+const corOptions = {
+                  origin: "https://mern-blogportfolio-frontend.onrender.com",
+                   methods: "GET", "PUT", "POST", "DELETE", "PATCH", "HEAD",
+                  credentials: true,
+                  };
+app.use(cors(corOptions)); 
 
 
 app.use(express.json());
