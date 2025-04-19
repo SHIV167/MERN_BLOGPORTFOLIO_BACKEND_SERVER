@@ -32,5 +32,4 @@ yarn-error.log*
 .vscode/
 
 # Uploads
-backend/uploads/*
 !backend/uploads/.gitkeep
