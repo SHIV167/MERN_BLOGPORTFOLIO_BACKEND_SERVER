@@ -15,7 +15,7 @@ connectDB();
 // Middleware
 const corOptions = {
                   origin: "https://mern-blogportfolio-frontend.onrender.com",
-                   methods: "GET", "PUT", "POST", "DELETE", "PATCH", "HEAD",
+                   methods: "GET", "POST", "DELETE", "PATCH", "HEAD",
                   credentials: true,
                   };
 app.use(cors(corOptions)); 
