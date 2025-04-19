@@ -14,11 +14,11 @@ connectDB();
 
 // Middleware
 const corOptions = {
-                  origin: "https://mern-blogportfolio-frontend.onrender.com",
-                   methods: "GET", "POST", "DELETE", "PATCH", "HEAD",
-                  credentials: true,
-                  };
-app.use(cors(corOptions)); 
+  origin: "https://mern-blogportfolio-frontend.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
+  credentials: true,
+};
+app.use(cors(corOptions));
 
 
 app.use(express.json());
