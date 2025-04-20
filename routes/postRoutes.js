@@ -3,44 +3,20 @@ const router = express.Router();
 const Post = require("../models/postModel");
 const { protect, admin } = require("../middleware/authMiddleware");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinaryConfig');
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure multer for image upload
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+// Configure Cloudinary storage for multer
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'mern_blog_uploads', // Cloudinary folder
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
+    transformation: [{ width: 800, height: 800, crop: 'limit' }],
   },
 });
 
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
-  },
-  fileFilter: function (req, file, cb) {
-    const filetypes = /jpeg|jpg|png|gif/;
-    const mimetype = filetypes.test(file.mimetype);
-    const extname = filetypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
-
-    if (mimetype && extname) {
-      return cb(null, true);
-    }
-    cb(new Error("Only image files (jpeg, jpg, png, gif) are allowed!"));
-  },
-});
+const upload = multer({ storage });
 
 // Error handling middleware for multer
 const uploadMiddleware = (req, res, next) => {
@@ -112,7 +88,7 @@ router.post("/", protect, admin, uploadMiddleware, async (req, res) => {
       tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
       slug,
       author: req.user._id,
-      image: req.file ? `/uploads/${req.file.filename}` : null,
+      image: req.file ? req.file.path : null,
     });
 
     const populatedPost = await Post.findById(post._id).populate(
@@ -150,7 +126,7 @@ router.put("/:id", protect, admin, uploadMiddleware, async (req, res) => {
             fs.unlinkSync(oldImagePath);
           }
         }
-        post.image = `/uploads/${req.file.filename}`;
+        post.image = req.file.path;
       }
       if (title && title !== post.title) {
         post.slug = title
