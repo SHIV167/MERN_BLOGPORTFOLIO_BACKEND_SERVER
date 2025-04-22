@@ -21,6 +21,8 @@ router.put("/", protect, async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+      // Handle profile image URL
+      user.profileImage = req.body.profileImage || user.profileImage;
 
       const updatedUser = await user.save();
 
@@ -29,6 +31,7 @@ router.put("/", protect, async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         isAdmin: updatedUser.isAdmin,
+        profileImage: updatedUser.profileImage,
       });
     } else {
       res.status(404).json({ message: "User not found" });
