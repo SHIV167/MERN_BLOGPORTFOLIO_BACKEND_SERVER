@@ -1,4 +1,5 @@
 const NewsletterPopup = require('../models/NewsletterPopup');
+const NewsletterSubscriber = require('../models/NewsletterSubscriber');
 const nodemailer = require('nodemailer');
 
 exports.getAllNewsletters = async (req, res) => {
@@ -30,15 +31,31 @@ exports.deleteNewsletter = async (req, res) => {
   res.json({ message: 'Deleted' });
 };
 
+// List all newsletter subscribers
+exports.getSubscribers = async (req, res) => {
+  const subs = await NewsletterSubscriber.find().sort({ subscribedAt: -1 });
+  res.json(subs);
+};
+
 // Send confirmation email upon subscription
 exports.subscribeNewsletter = async (req, res) => {
   const { email } = req.body;
+  // Save subscriber to DB
+  try {
+    const subscriber = new NewsletterSubscriber({ email });
+    await subscriber.save();
+  } catch (err) {
+    if (err.code !== 11000) {
+      console.error('Subscriber save error', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+  }
   // Configure mail transporter
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: process.env.SMTP_PORT || '465',
     secure: process.env.SMTP_SECURE === 'true',
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD },
   });
   // Send email
   await transporter.sendMail({
