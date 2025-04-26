@@ -1,4 +1,5 @@
 const NewsletterPopup = require('../models/NewsletterPopup');
+const nodemailer = require('nodemailer');
 
 exports.getAllNewsletters = async (req, res) => {
   const items = await NewsletterPopup.find().sort({ createdAt: -1 });
@@ -27,4 +28,25 @@ exports.deleteNewsletter = async (req, res) => {
   const { id } = req.params;
   await NewsletterPopup.findByIdAndDelete(id);
   res.json({ message: 'Deleted' });
+};
+
+// Send confirmation email upon subscription
+exports.subscribeNewsletter = async (req, res) => {
+  const { email } = req.body;
+  // Configure mail transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+  });
+  // Send email
+  await transporter.sendMail({
+    from: `"Newsletter" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Subscription Confirmed',
+    text: 'Thank you for subscribing to our newsletter!',
+    html: '<p>Thank you for subscribing to our newsletter!</p>',
+  });
+  res.status(200).json({ message: 'Subscription successful' });
 };
