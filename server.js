@@ -36,6 +36,7 @@ app.use("/api/header-menu", require("./routes/headerMenu"));
 app.use("/api/footer", require("./routes/footerContent"));
 app.use('/api/feedback', require('./routes/postFeedback'));
 app.use('/api/popup', require('./routes/popup'));
+app.use('/api/newsletter', require('./routes/newsletter'));
 app.use('/api/upload', require('./routes/upload'));
 
 // Serve uploaded files
