@@ -7,6 +7,7 @@ const {
   deleteNewsletter,
   subscribeNewsletter
 } = require('../controllers/newsletterController');
+const { getSubscribers } = require('../controllers/newsletterController');
 
 // Dashboard: list all newsletter popups
 router.get('/all', getAllNewsletters);
@@ -18,5 +19,7 @@ router.put('/:id', updateNewsletter);
 router.delete('/:id', deleteNewsletter);
 // Subscription endpoint
 router.post('/subscribe', subscribeNewsletter);
+// Subscribers list endpoint
+router.get('/subscribers', getSubscribers);
 
 module.exports = router;
