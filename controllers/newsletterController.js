@@ -38,7 +38,7 @@ exports.subscribeNewsletter = async (req, res) => {
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: process.env.SMTP_PORT || '465',
     secure: process.env.SMTP_SECURE === 'true',
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
   });
   // Send email
   await transporter.sendMail({
