@@ -10,7 +10,6 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'mern_blog_uploads', // You can change this folder name in your Cloudinary account
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'avif'],
     transformation: [{ width: 800, height: 800, crop: 'limit' }], // Optional: resize images
   },
 });
