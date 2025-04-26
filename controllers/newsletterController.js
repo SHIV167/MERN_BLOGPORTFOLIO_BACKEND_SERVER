@@ -35,8 +35,8 @@ exports.subscribeNewsletter = async (req, res) => {
   const { email } = req.body;
   // Configure mail transporter
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: process.env.SMTP_PORT || '465',
     secure: process.env.SMTP_SECURE === 'true',
     auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
   });
